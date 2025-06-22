@@ -77,6 +77,7 @@ export class PacmanScene extends Phaser.Scene {
   }
   
   createItemGroups() {
+    // Cria grupos para dots e power pills
     this.dots = this.physics.add.group();
     this.powerPills = this.physics.add.group();
   }

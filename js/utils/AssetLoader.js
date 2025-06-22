@@ -46,15 +46,14 @@ export class AssetLoader {
     scene.load.spritesheet(
       "pacmanDeath3",
       "pac man & life counter & death/pac man death/spr_pacdeath_2.png",
-      {
-        frameWidth: 32,
+      {        frameWidth: 32,
         frameHeight: 32,
       }
     );
 
     // Itens do jogo
-    scene.load.image("dot", "pacman items/dot.png");
-    scene.load.image("powerPill", "pacman items/spr_power_pill_0.png");
+    scene.load.image("dot", "pacman%20Items/dot.png");
+    scene.load.image("powerPill", "pacman%20Items/spr_power_pill_0.png");
 
     // Sprites dos fantasmas
     scene.load.spritesheet(
@@ -99,9 +98,7 @@ export class AssetLoader {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
-    );
-      // UI e outros elementos
+      }    );    // UI e outros elementos
     scene.load.image(
       "lifeCounter1",
       "pac man & life counter & death/pac man life counter/spr_lifecounter_0.png"
