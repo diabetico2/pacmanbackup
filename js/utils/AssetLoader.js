@@ -2,37 +2,33 @@ export class AssetLoader {
   static preloadAssets(scene) {
     console.log('AssetLoader: Iniciando carregamento de assets...');
     console.log('Base URL:', scene.load.baseURL || 'undefined');
-    
-    // Carrega o tileset e mapa
-    scene.load.image("pacman tileset", "pac%20man%20tiles/tileset.png");
+      // Carrega o tileset e mapa
+    scene.load.image("pacman tileset", "pac-man-tiles/tileset.png");
     scene.load.tilemapTiledJSON("map", "pacman-map.json");
-    
-    // Carrega sprites do Pacman
-    scene.load.spritesheet("pacman", "pacman%20characters/pacman/pacman0.png", {
+      // Carrega sprites do Pacman
+    scene.load.spritesheet("pacman", "pacman-characters/pacman/pacman0.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
-    scene.load.spritesheet("pacman1", "pacman%20characters/pacman/pacman1.png", {
+    scene.load.spritesheet("pacman1", "pacman-characters/pacman/pacman1.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
-    scene.load.spritesheet("pacman2", "pacman%20characters/pacman/pacman2.png", {
+    scene.load.spritesheet("pacman2", "pacman-characters/pacman/pacman2.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
-    scene.load.spritesheet("pacman3", "pacman%20characters/pacman/pacman3.png", {
+    scene.load.spritesheet("pacman3", "pacman-characters/pacman/pacman3.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
-    scene.load.spritesheet("pacman4", "pacman%20characters/pacman/pacman4.png", {
+    scene.load.spritesheet("pacman4", "pacman-characters/pacman/pacman4.png", {
       frameWidth: 32,
       frameHeight: 32,
-    });
-
-    // Sprites para a animação de morte do Pacman
+    });    // Sprites para a animação de morte do Pacman
     scene.load.spritesheet(
       "pacmanDeath1",
-      "pac%20man%20%26%20life%20counter%20%26%20death/pac%20man%20death/spr_pacdeath_0.png",
+      "pac-man-life-death/pac man death/spr_pacdeath_0.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -40,7 +36,7 @@ export class AssetLoader {
     );
     scene.load.spritesheet(
       "pacmanDeath2",
-      "pac%20man%20%26%20life%20counter%20%26%20death/pac%20man%20death/spr_pacdeath_1.png",
+      "pac-man-life-death/pac man death/spr_pacdeath_1.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -48,18 +44,15 @@ export class AssetLoader {
     );
     scene.load.spritesheet(
       "pacmanDeath3",
-      "pac%20man%20%26%20life%20counter%20%26%20death/pac%20man%20death/spr_pacdeath_2.png",
+      "pac-man-life-death/pac man death/spr_pacdeath_2.png",
       {
         frameWidth: 32,
         frameHeight: 32,
       }
-    );    // Itens do jogo (com cache-busting)
-    const timestamp = Date.now();
-    console.log('Carregando dots com timestamp:', timestamp);
-    console.log('URL dot:', `pacman%20Items/dot.png?v=${timestamp}`);
-    console.log('URL powerPill:', `pacman%20Items/spr_power_pill_0.png?v=${timestamp}`);
-    scene.load.image("dot", `pacman%20Items/dot.png?v=${timestamp}`);
-    scene.load.image("powerPill", `pacman%20Items/spr_power_pill_0.png?v=${timestamp}`);
+    );// Itens do jogo (usando nova pasta sem espaços)
+    console.log('Carregando dots da pasta: pacman-items/');
+    scene.load.image("dot", "pacman-items/dot.png");
+    scene.load.image("powerPill", "pacman-items/spr_power_pill_0.png");
 
     // Sprites dos fantasmas
     scene.load.spritesheet(
@@ -105,16 +98,14 @@ export class AssetLoader {
         frameWidth: 32,
         frameHeight: 32,
       }
-    );
-
-    // UI e outros elementos
+    );    // UI e outros elementos
     scene.load.image(
       "lifeCounter1",
-      "pac%20man%20%26%20life%20counter%20%26%20death/pac%20man%20life%20counter/spr_lifecounter_0.png"
+      "pac-man-life-death/pac man life counter/spr_lifecounter_0.png"
     );
     scene.load.image(
       "lifeCounter2",
-      "pac%20man%20%26%20life%20counter%20%26%20death/pac%20man%20life%20counter/spr_lifecounter_0.png"
+      "pac-man-life-death/pac man life counter/spr_lifecounter_0.png"
     );
   }
 }
