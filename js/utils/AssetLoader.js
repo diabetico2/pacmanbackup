@@ -1,5 +1,8 @@
 export class AssetLoader {
   static preloadAssets(scene) {
+    console.log('AssetLoader: Iniciando carregamento de assets...');
+    console.log('Base URL:', scene.load.baseURL || 'undefined');
+    
     // Carrega o tileset e mapa
     scene.load.image("pacman tileset", "pac%20man%20tiles/tileset.png");
     scene.load.tilemapTiledJSON("map", "pacman-map.json");
@@ -50,11 +53,13 @@ export class AssetLoader {
         frameWidth: 32,
         frameHeight: 32,
       }
-    );
-
-    // Itens do jogo
-    scene.load.image("dot", "pacman%20Items/dot.png");
-    scene.load.image("powerPill", "pacman%20Items/spr_power_pill_0.png");
+    );    // Itens do jogo (com cache-busting)
+    const timestamp = Date.now();
+    console.log('Carregando dots com timestamp:', timestamp);
+    console.log('URL dot:', `pacman%20Items/dot.png?v=${timestamp}`);
+    console.log('URL powerPill:', `pacman%20Items/spr_power_pill_0.png?v=${timestamp}`);
+    scene.load.image("dot", `pacman%20Items/dot.png?v=${timestamp}`);
+    scene.load.image("powerPill", `pacman%20Items/spr_power_pill_0.png?v=${timestamp}`);
 
     // Sprites dos fantasmas
     scene.load.spritesheet(
