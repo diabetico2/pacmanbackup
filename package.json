@@ -1,0 +1,24 @@
+{
+  "name": "pacmanonline",
+  "version": "1.0.0",
+  "description": "Para rodar, basta apenas clicar no index.html ou usar o live server # pacmanbackup",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diabetico2/pacmanbackup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/diabetico2/pacmanbackup/issues"
+  },
+  "homepage": "https://github.com/diabetico2/pacmanbackup#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.0"
+  }
+}

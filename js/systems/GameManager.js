@@ -1,6 +1,7 @@
 import { GAME_CONFIG } from '../config/GameConfig.js';
 
-export class GameManager {  constructor(scene) {
+export class GameManager {
+  constructor(scene) {
     this.scene = scene;
     this.score = 0;
     this.level = 1;
@@ -14,6 +15,10 @@ export class GameManager {  constructor(scene) {
     this.dotsEaten = 0; // Contador de dots comidos
     this.isLevelingUp = false; // Flag para prevenir múltiplos level ups
     this.browserKeyListener = null; // Referência para o listener do navegador
+    
+    // Dados do player online
+    this.playerName = scene.scene.settings.data?.playerName || 'Player';
+    this.supabaseService = scene.scene.settings.data?.supabaseService || null;
   }
   createUI() {
     // Cria contadores de vida dinamicamente
@@ -216,6 +221,11 @@ export class GameManager {  constructor(scene) {
     
     return this.lives > 0;
   }  gameOver() {
+    // Salva o resultado no Supabase se estiver online
+    if (this.supabaseService) {
+      this.supabaseService.saveGameResult(this.score, this.level);
+    }
+
     // Destrói todos os sprites principais
     this.scene.pacman.sprite.destroy();
     this.scene.redGhost.sprite.destroy();
@@ -229,7 +239,7 @@ export class GameManager {  constructor(scene) {
     // Mostra texto de game over
     this.gameOverText = this.scene.add.text(
       this.scene.cameras.main.centerX,
-      this.scene.cameras.main.centerY - 30,
+      this.scene.cameras.main.centerY - 50,
       'FIM DE JOGO',
       {
         fontSize: '32px',
@@ -237,6 +247,18 @@ export class GameManager {  constructor(scene) {
         fontFamily: 'Arial',
         stroke: '#000000',
         strokeThickness: 4
+      }
+    ).setOrigin(0.5);
+
+    // Mostra nome do player
+    this.playerNameText = this.scene.add.text(
+      this.scene.cameras.main.centerX,
+      this.scene.cameras.main.centerY - 10,
+      `Player: ${this.playerName}`,
+      {
+        fontSize: '16px',
+        fill: '#ffffff',
+        fontFamily: 'Arial'
       }
     ).setOrigin(0.5);
     
@@ -251,12 +273,24 @@ export class GameManager {  constructor(scene) {
         fontFamily: 'Arial'
       }
     ).setOrigin(0.5);
+
+    // Mostra nível alcançado
+    this.finalLevelText = this.scene.add.text(
+      this.scene.cameras.main.centerX,
+      this.scene.cameras.main.centerY + 50,
+      `Nível Alcançado: ${this.level}`,
+      {
+        fontSize: '16px',
+        fill: '#00ff00',
+        fontFamily: 'Arial'
+      }
+    ).setOrigin(0.5);
     
     // Mostra instruções para reiniciar
     this.restartText = this.scene.add.text(
       this.scene.cameras.main.centerX,
-      this.scene.cameras.main.centerY + 60,
-      'Reinicie a pagina para começar novamente',
+      this.scene.cameras.main.centerY + 90,
+      'Pressione ESPAÇO para voltar ao menu',
       {
         fontSize: '16px',
         fill: '#ffffff',
@@ -275,7 +309,7 @@ export class GameManager {  constructor(scene) {
       // Flag para indicar que está em game over
     this.isGameOver = true;
     
-    console.log("Game Over ativado. Pressione ESPAÇO para reiniciar.");
+    console.log("Game Over ativado. Pressione ESPAÇO para voltar ao menu.");
     
     // Configura listener de teclado usando eventos do navegador
     this.setupBrowserKeyListener();
@@ -298,8 +332,8 @@ export class GameManager {  constructor(scene) {
     // Método para verificar se deve reiniciar o jogo (agora simplificado)
   checkRestart() {
     // Este método não é mais necessário pois o restart é feito via listener do navegador
-  }restartGame() {
-    console.log("Reiniciando o jogo...");
+  }  restartGame() {
+    console.log("Voltando ao menu...");
     
     // Executa limpeza de recursos
     this.cleanup();
@@ -308,14 +342,16 @@ export class GameManager {  constructor(scene) {
     if (this.gameOverText) this.gameOverText.destroy();
     if (this.finalScoreText) this.finalScoreText.destroy();
     if (this.restartText) this.restartText.destroy();
+    if (this.playerNameText) this.playerNameText.destroy();
+    if (this.finalLevelText) this.finalLevelText.destroy();
     
     // Reset das flags
     this.isGameOver = false;
     this.isLevelingUp = false;
     this.spaceCursor = null;
     
-    // Reinicia a cena completamente
-    this.scene.scene.restart();
+    // Volta para a tela de login
+    this.scene.scene.start('LoginScene');
   }
     handlePacmanGhostCollision(pacman, ghost) {
     // Se o fantasma estiver em modo "scared" e pode ser comido

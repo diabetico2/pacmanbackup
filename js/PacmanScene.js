@@ -10,7 +10,7 @@ import { AssetLoader } from './utils/AssetLoader.js';
 
 export class PacmanScene extends Phaser.Scene {
   constructor() {
-    super();
+    super({ key: 'PacmanScene' });
     this.blockSize = GAME_CONFIG.blockSize;
     this.speed = GAME_CONFIG.speed;
     this.ghostSpeed = this.speed * GAME_CONFIG.ghostSpeedMultiplier;
