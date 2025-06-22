@@ -4,9 +4,9 @@ export const GAME_CONFIG = {
   height: 560,
   backgroundColor: "#000000",
   blockSize: 16,
-  speed: 170,
-  ghostSpeedMultiplier: 0.7,
-  scaredGhostSpeedMultiplier: 0.5,
+  speed: 120, // Reduzido de 170 para 120
+  ghostSpeedMultiplier: 0.8, // Aumentado ligeiramente de 0.7 para 0.8 para manter desafio
+  scaredGhostSpeedMultiplier: 0.6, // Aumentado de 0.5 para 0.6
   
   // Durações dos modos (em milissegundos)
   scatterModeDuration: 7000,
@@ -28,13 +28,12 @@ export const GAME_CONFIG = {
     powerPill: 50,
     ghost: 200
   },
-  
-  // Configurações de dificuldade por nível
+    // Configurações de dificuldade por nível
   difficulty: {
-    ghostSpeedIncreasePerLevel: 8,
-    scaredModeReductionPerLevel: 500,
+    ghostSpeedIncreasePerLevel: 5, // Reduzido de 8 para 5
+    scaredModeReductionPerLevel: 300, // Reduzido de 500 para 300
     minimumScaredModeDuration: 3000,
-    maxSpeedIncrease: 50
+    maxSpeedIncrease: 30 // Reduzido de 50 para 30
   }
 };
 

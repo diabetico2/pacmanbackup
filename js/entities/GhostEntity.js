@@ -48,11 +48,16 @@ export class GhostEntity {
   setVisible(visible) {
     this.sprite.setVisible(visible);
   }
-  
-  enterMaze(x, y) {
+    enterMaze(x, y) {
     this.setPosition(x, y);
     this.enteredMaze = true;
-    this.hasBeenEaten = true;
+    
+    // Se estiver em modo scared quando entrar no labirinto, pode ser comido
+    if (this.scene.ghostAI.currentMode === "scared") {
+      this.hasBeenEaten = false;
+    } else {
+      this.hasBeenEaten = true;
+    }
   }
   
   reset(x, y) {

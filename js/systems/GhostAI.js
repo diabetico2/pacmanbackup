@@ -142,8 +142,7 @@ export class GhostAI {
     if (ghost.texture.key === "orangeGhost") return this.scatterTargets.CLYDE;
     if (ghost.texture.key === "blueGhost") return this.scatterTargets.INKY;
   }
-  
-  setScaredMode() {
+    setScaredMode() {
     this.currentMode = "scared";
     this.setModeTimer(this.scaredModeDuration);
     
@@ -152,7 +151,12 @@ export class GhostAI {
       this.scene.pathfinding.updateGhostPath(ghost, scaredTarget);
       ghost.startBlinking(this.scaredModeDuration);
       ghost.setTexture("scaredGhost");
-      ghost.hasBeenEaten = false;
+      
+      // Se o fantasma já entrou no labirinto, ele pode ser comido
+      if (ghost.enteredMaze) {
+        ghost.hasBeenEaten = false;
+      }
+      // Se ainda não entrou, mantém hasBeenEaten = true até entrar
     });
   }
   

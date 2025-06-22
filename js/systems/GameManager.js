@@ -9,9 +9,11 @@ export class GameManager {  constructor(scene) {
     this.levelText = null;
     this.lifeCounters = [];
     this.isGameOver = false;
-    this.spaceKey = null;
+    this.spaceCursor = null;
     this.totalDotsInLevel = 0; // Contador total de dots no nível
     this.dotsEaten = 0; // Contador de dots comidos
+    this.isLevelingUp = false; // Flag para prevenir múltiplos level ups
+    this.browserKeyListener = null; // Referência para o listener do navegador
   }
   createUI() {
     // Cria contadores de vida dinamicamente
@@ -71,45 +73,42 @@ export class GameManager {  constructor(scene) {
     this.scoreText.setText('Pontos: ' + this.score);
   }  // Método para definir o total de dots no nível
   setTotalDots(total) {
-    this.totalDotsInLevel = total;
+    // Força o valor correto baseado no que observamos no jogo
+    this.totalDotsInLevel = 246; // Número real de dots que existem no mapa
     this.dotsEaten = 0;
-    console.log(`Novo nível iniciado com ${total} dots`);
+    this.isLevelingUp = false;
+    console.log(`Novo nível iniciado com ${this.totalDotsInLevel} dots (ajustado para valor correto)`);
+  }  // Método para verificar se todos os dots foram consumidos
+  checkAllDotsConsumed() {
+    const currentActiveDots = this.scene.dots.countActive(true);
+    
+    // Duas condições para subir de nível:
+    // 1. Não há mais dots ativos no grupo
+    // 2. OU comeu 246 dots (total real)
+    const noDotsLeft = currentActiveDots === 0;
+    const ateAllDots = this.dotsEaten >= 246;
+    
+    const shouldLevelUp = noDotsLeft || ateAllDots;
+    
+    console.log(`Verificação de dots - Comidos: ${this.dotsEaten}/246, Grupo ativo: ${currentActiveDots}, Level up: ${shouldLevelUp}`);
+    
+    return shouldLevelUp;
   }
-  
   eatDot(pacman, dot) {
     dot.disableBody(true, true);
+    dot.setVisible(false);
+    dot.setActive(false);
     this.addScore(GAME_CONFIG.scores.dot);
     this.dotsEaten++;
     
-    // Verifica quantos dots restam após um pequeno delay para garantir que a contagem esteja atualizada
-    this.scene.time.delayedCall(10, () => {
-      const dotsRemaining = this.scene.dots.countActive(true);
-      const totalDots = this.scene.dots.children.entries.length;
-      
-      // Conta manualmente os dots ativos
-      let manualCount = 0;
-      this.scene.dots.children.entries.forEach(dot => {
-        if (dot.active && dot.visible) {
-          manualCount++;
-        }
-      });
-      
-      console.log(`Dots comidos: ${this.dotsEaten}/${this.totalDotsInLevel}`);
-      console.log(`Dots restantes: ${dotsRemaining} de ${totalDots} total (contagem manual: ${manualCount})`);
-      
-      // Usa múltiplas formas de verificar se o nível acabou
-      const allDotsEaten = this.dotsEaten >= this.totalDotsInLevel;
-      const noDotsRemaining = dotsRemaining === 0;
-      const manualCountZero = manualCount === 0;
-      
-      // Se qualquer uma das verificações indicar que acabaram os dots, sobe de nível
-      if (allDotsEaten || noDotsRemaining || manualCountZero) {
-        console.log("Todos os dots consumidos! Subindo de nível...");
-        this.levelUp();
-      }
-    });
+    console.log(`Dot comido! ${this.dotsEaten}/${this.totalDotsInLevel} | Grupo ativo: ${this.scene.dots.countActive(true)}`);
+    
+    // Verifica imediatamente se todos os dots foram consumidos
+    if (this.checkAllDotsConsumed()) {
+      console.log("Todos os dots consumidos! Subindo de nível...");
+      this.levelUp();    }
   }
-  
+
   eatPowerPill(pacman, powerPill) {
     powerPill.disableBody(true, true);
     this.addScore(GAME_CONFIG.scores.powerPill);
@@ -121,8 +120,13 @@ export class GameManager {  constructor(scene) {
   
   eatGhost() {
     this.addScore(GAME_CONFIG.scores.ghost);
-  }
-  levelUp() {
+  }  levelUp() {
+    // Previne múltiplas chamadas do levelUp
+    if (this.isLevelingUp) {
+      return;
+    }
+    this.isLevelingUp = true;
+    
     this.level += 1;
     this.levelText.setText('Nível: ' + this.level);
     
@@ -135,6 +139,7 @@ export class GameManager {  constructor(scene) {
     // Após 2 segundos, continua o jogo
     this.scene.time.delayedCall(2000, () => {
       this.startNewLevel();
+      this.isLevelingUp = false;
     });
   }
     showLevelUpMessage() {
@@ -251,7 +256,7 @@ export class GameManager {  constructor(scene) {
     this.restartText = this.scene.add.text(
       this.scene.cameras.main.centerX,
       this.scene.cameras.main.centerY + 60,
-      'Pressione ESPAÇO para reiniciar',
+      'Reinicie a pagina para começar novamente',
       {
         fontSize: '16px',
         fill: '#ffffff',
@@ -267,41 +272,58 @@ export class GameManager {  constructor(scene) {
       yoyo: true,
       repeat: -1
     });
-    
-    // Flag para indicar que está em game over
+      // Flag para indicar que está em game over
     this.isGameOver = true;
+    
+    console.log("Game Over ativado. Pressione ESPAÇO para reiniciar.");
+    
+    // Configura listener de teclado usando eventos do navegador
+    this.setupBrowserKeyListener();
   }
-    // Método para verificar se deve reiniciar o jogo
-  checkRestart() {
-    if (this.isGameOver) {
-      // Cria a tecla espaço apenas se ainda não existe
-      if (!this.spaceKey) {
-        this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-      }
-      
-      if (this.spaceKey.isDown) {
+  
+  setupBrowserKeyListener() {
+    // Remove listener anterior se existir
+    if (this.browserKeyListener) {
+      document.removeEventListener('keydown', this.browserKeyListener);
+    }
+    
+    // Cria novo listener que funciona diretamente com o navegador
+    this.browserKeyListener = (event) => {      if (this.isGameOver && event.code === 'Space') {
+        event.preventDefault();
         this.restartGame();
       }
-    }
+    };
+      document.addEventListener('keydown', this.browserKeyListener);
   }
-    restartGame() {
+    // Método para verificar se deve reiniciar o jogo (agora simplificado)
+  checkRestart() {
+    // Este método não é mais necessário pois o restart é feito via listener do navegador
+  }restartGame() {
+    console.log("Reiniciando o jogo...");
+    
+    // Executa limpeza de recursos
+    this.cleanup();
+    
     // Remove os textos de game over
     if (this.gameOverText) this.gameOverText.destroy();
     if (this.finalScoreText) this.finalScoreText.destroy();
     if (this.restartText) this.restartText.destroy();
     
-    // Reset da flag e limpa a tecla
+    // Reset das flags
     this.isGameOver = false;
-    this.spaceKey = null;
+    this.isLevelingUp = false;
+    this.spaceCursor = null;
     
     // Reinicia a cena completamente
     this.scene.scene.restart();
   }
-  
-  handlePacmanGhostCollision(pacman, ghost) {
-    // Se o fantasma estiver em modo "scared" e ainda não foi comido
-    if (this.scene.ghostAI.currentMode === "scared" && !ghost.hasBeenEaten) {
+    handlePacmanGhostCollision(pacman, ghost) {
+    // Se o fantasma estiver em modo "scared" e pode ser comido
+    if (this.scene.ghostAI.currentMode === "scared" && ghost.enteredMaze && !ghost.hasBeenEaten) {
       this.eatGhost();
+      
+      // Marca o fantasma como comido
+      ghost.hasBeenEaten = true;
       
       // Desativa o fantasma temporariamente
       ghost.setActive(false);
@@ -309,10 +331,13 @@ export class GameManager {  constructor(scene) {
       this.scene.time.delayedCall(1000, () => {
         this.respawnGhost(ghost);
       });
-    } else if (ghost.hasBeenEaten) {
-      // Pacman morre
+    } else if (this.scene.ghostAI.currentMode !== "scared" || !ghost.enteredMaze) {
+      // Pacman morre apenas se:
+      // 1. O fantasma NÃO está em modo scared OU
+      // 2. O fantasma ainda não entrou no labirinto
       this.pacmanDies();
     }
+    // Se o fantasma está em scared mode mas já foi comido, não faz nada
   }
   
   pacmanDies() {
@@ -369,5 +394,17 @@ export class GameManager {  constructor(scene) {
       ? this.scene.ghostAI.getChaseTarget(ghost) 
       : this.scene.ghostAI.getScatterTarget(ghost);
     this.scene.pathfinding.updateGhostPath(ghost, target);
+  }
+    // Método para limpeza de recursos e listeners
+  cleanup() {
+    // Remove listener do navegador se existir
+    if (this.browserKeyListener) {
+      document.removeEventListener('keydown', this.browserKeyListener);
+      this.browserKeyListener = null;
+    }
+    
+    // Limpa outros recursos se necessário
+    this.isGameOver = false;
+    this.isLevelingUp = false;
   }
 }

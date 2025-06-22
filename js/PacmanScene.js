@@ -160,12 +160,13 @@ export class PacmanScene extends Phaser.Scene {
     this.powerPills.create(32, 144, "powerPill");
     this.powerPills.create(432, 144, "powerPill");
     this.powerPills.create(32, 480, "powerPill");
-    this.powerPills.create(432, 480, "powerPill");
-      console.log(`Total de dots criados: ${dotsCreated}`);
+    this.powerPills.create(432, 480, "powerPill");    console.log(`Total de dots criados: ${dotsCreated}`);
     console.log(`Dots ativos no grupo: ${this.dots.countActive(true)}`);
     
-    // Informa ao GameManager quantos dots foram criados
-    this.gameManager.setTotalDots(dotsCreated);
+    // Informa ao GameManager quantos dots foram realmente criados (usar contagem do grupo)
+    const actualDotsCount = this.dots.countActive(true);
+    this.gameManager.setTotalDots(actualDotsCount);
+    console.log(`GameManager configurado com ${actualDotsCount} dots`);
   }
     resetGhosts() {
     this.redGhost.reset(232, 290);
@@ -203,5 +204,23 @@ export class PacmanScene extends Phaser.Scene {
         this.movement.updateGhostMovement(ghost, this.ghostSpeed);
       }
     });
+    
+    // Verificação adicional de level up a cada segundo
+    if (this.time.now % 1000 < 16 && !this.gameManager.isLevelingUp) {
+      if (this.gameManager.checkAllDotsConsumed && this.gameManager.checkAllDotsConsumed()) {
+        console.log("Verificação periódica: Todos os dots consumidos!");
+        this.gameManager.levelUp();
+      }
+    }
+  }
+
+  // Método chamado quando a cena é destruída ou reiniciada
+  shutdown() {
+    console.log('PacmanScene sendo finalizada...');
+    
+    // Chama cleanup do GameManager para remover listeners
+    if (this.gameManager) {
+      this.gameManager.cleanup();
+    }
   }
 }
