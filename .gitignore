@@ -1,0 +1,77 @@
+# Dependências do Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Logs
+logs
+*.log
+
+# Arquivos de ambiente e configuração sensível
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+config.json
+secrets.json
+
+# Chaves de API (caso movam para arquivos separados)
+**/api-keys.js
+**/config/keys.js
+**/config/secrets.js
+
+# Cache e arquivos temporários
+.cache/
+.temp/
+.tmp/
+*.tmp
+*.temp
+
+# Arquivos do sistema operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Builds e distribuição
+dist/
+build/
+out/
+
+# Arquivos de backup
+*.bak
+*.backup
+*.old
+
+# Arquivos de teste específicos com dados reais
+test_supabase_real.js
+debug_*.js
+
+# Screenshots e imagens temporárias
+screenshots/
+*.png.backup
+*.jpg.backup
+
+# Arquivos específicos do projeto que podem conter dados sensíveis
+database/test_data.sql
+database/backup_*.sql
+
+# Arquivos de documentação que podem conter chaves
+KEYS.md
+API_KEYS.md
+PRODUCTION_SETUP.md
