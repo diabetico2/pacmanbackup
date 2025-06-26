@@ -16,7 +16,7 @@ Um jogo Pacman clássico com sistema de ranking mundial! Crie sua conta, jogue e
 
 ## 🚀 **Jogar Online**
 
-### [🎮 CLIQUE AQUI PARA JOGAR](https://seu-usuario.github.io/pacman-online/)
+### [🎮 CLIQUE AQUI PARA JOGAR](https://diabetico2.github.io/pacmanbackup/)
 
 ## 🛠 **Tecnologias Utilizadas**
 
@@ -44,60 +44,6 @@ Um jogo Pacman clássico com sistema de ranking mundial! Crie sua conta, jogue e
 - 👻 **Fantasma**: 200 pontos
 - 🎚️ **Multiplicador de nível**: Score aumenta conforme o nível
 
-## 🔧 **Instalação Local**
+Direitos:
 
-1. **Clone o repositório**:
-```bash
-git clone https://github.com/seu-usuario/pacman-online.git
-cd pacman-online
-```
-
-2. **Configure o Supabase**:
-   - Crie uma conta em [supabase.com](https://supabase.com)
-   - Execute o script SQL em `database/setup.sql`
-   - Atualize as chaves em `js/services/SimpleSupabaseService.js`
-
-3. **Sirva os arquivos**:
-```bash
-# Opção 1: Python
-python -m http.server 8000
-
-# Opção 2: Node.js
-npx serve
-
-# Opção 3: Live Server (VS Code)
-```
-
-4. **Acesse**: http://localhost:8000
-
-## 🌐 **Deploy no GitHub Pages**
-
-O jogo é automaticamente deployado no GitHub Pages. Veja instruções completas em `DEPLOY_GITHUB_PAGES.md`.
-
-## 🎮 **Controles**
-
-- **⬅️ ➡️ ⬆️ ⬇️**: Mover Pacman
-- **ESPAÇO**: Confirmar/Reiniciar
-- **A-Z, 0-9**: Digitar nome e senha
-- **BACKSPACE**: Apagar caracteres
-- **ENTER**: Confirmar entrada
-
-## 🏆 **Ranking**
-
-O sistema de ranking é global e em tempo real:
-- **Top 5** players são sempre exibidos
-- **Sua posição** atual no ranking
-- **Melhor score** e **nível alcançado** por player
-- **Total de partidas** jogadas
-
-## 🤝 **Contribuindo**
-
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
----
-
-⭐ **Curtiu o projeto? Deixe uma star!** ⭐
+Todos direitos a Bandai Namco Entertainment, esse jogo é apenas um fan game para a faculdade feito para gerar nenhum lucro
